@@ -1,0 +1,3 @@
+/storage/gpfs_data/dampe/users/ecatanzani/MyRepos/DAMPE/Salomon/SampleSBI/0102900000_SBI.root
+/storage/gpfs_data/dampe/users/ecatanzani/MyRepos/DAMPE/Salomon/SampleSBI/0103000000_SBI.root
+/storage/gpfs_data/dampe/users/ecatanzani/MyRepos/DAMPE/Salomon/SampleSBI/0102800000_SBI.root

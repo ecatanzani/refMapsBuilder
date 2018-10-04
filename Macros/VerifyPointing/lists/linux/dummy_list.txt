@@ -1,0 +1,4 @@
+/storage/gpfs_data/dampe/data/FM/Rec/FT2/6.0.0/6.0.0.v5/0168200000/20180502212128_20180502212849_SBI.root
+/storage/gpfs_data/dampe/data/FM/Rec/FT2/6.0.0/6.0.0.v5/0168200000/20180502093801_20180502095041_SBI.root
+/storage/gpfs_data/dampe/data/FM/Rec/FT2/6.0.0/6.0.0.v5/0168200000/20180502064455_20180502065805_SBI.root
+/storage/gpfs_data/dampe/data/FM/Rec/FT2/6.0.0/6.0.0.v5/0168200000/20180502035003_20180502040834_SBI.root

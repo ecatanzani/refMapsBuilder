@@ -1,0 +1,155 @@
+
+#include "MyHead.h"
+
+void read_SBI_data(
+                   Double_t &galactic_lat,
+                   Double_t &galactic_lon,
+                   Double_t &geographic_lat,
+                   Double_t &geographic_lon,
+                   Double_t sat_ra[],
+                   Double_t sat_dec[],
+                   UInt_t &sec,
+                   UShort_t &n_events,
+                   bool &good,
+                   TChain &tree,
+                   Float_t &lvtime,
+                   std::ofstream &out_file,
+                   std::vector<std::string> &SBIpaths,
+                   Long64_t &chain_entries
+                   )
+
+{
+    
+    for(UInt_t idx_p = 0; idx_p < SBIpaths.size(); idx_p++)
+        tree.Add(SBIpaths.at(idx_p).c_str());
+    
+    tree.SetBranchAddress("second",&sec);
+    tree.SetBranchAddress("goodsbi",&good);
+    tree.SetBranchAddress("glon",&galactic_lon);
+    tree.SetBranchAddress("glat",&galactic_lat);
+    tree.SetBranchAddress("nev",&n_events);
+    tree.SetBranchAddress("ra_scx",&sat_ra[0]);
+    tree.SetBranchAddress("ra_scy",&sat_ra[1]);
+    tree.SetBranchAddress("ra_scz",&sat_ra[2]);
+    tree.SetBranchAddress("dec_scx",&sat_dec[0]);
+    tree.SetBranchAddress("dec_scy",&sat_dec[1]);
+    tree.SetBranchAddress("dec_scz",&sat_dec[2]);
+    tree.SetBranchAddress("lat_geo",&geographic_lat);
+    tree.SetBranchAddress("lon_geo",&geographic_lon);
+    tree.SetBranchAddress("lvtime",&lvtime);
+    
+    tree.GetEntry(0);  //Set initial value for the variables
+    
+    chain_entries = tree.GetEntries();
+    
+    std::cout << "\nSBI data has been loaded" << std::endl << std::endl;
+    out_file << "SBI data has been loaded" << std::endl << std::endl;
+    
+}
+
+
+/*
+void read_SBI_data(Float_t &galactic_lat,Float_t &galactic_lon,Float_t &geographic_lat,Float_t &geographic_lon,Float_t sat_ra[],Float_t sat_dec[],UInt_t &sec,UShort_t &n_events,bool &good,TChain &tree,Float_t &lvtime,TString sbi_data_path,std::ofstream &out_file) {
+    
+    tree.Add(Form("%s/%s*_SBI.root", sbi_path.Data(),sbi_subsample.Data()));
+
+    tree.SetBranchAddress("second",&sec);
+    tree.SetBranchAddress("goodsbi",&good);
+    tree.SetBranchAddress("glon",&galactic_lon);
+    tree.SetBranchAddress("glat",&galactic_lat);
+    tree.SetBranchAddress("nev",&n_events);
+    tree.SetBranchAddress("ra_scx",&sat_ra[0]);
+    tree.SetBranchAddress("ra_scy",&sat_ra[1]);
+    tree.SetBranchAddress("ra_scz",&sat_ra[2]);
+    tree.SetBranchAddress("dec_scx",&sat_dec[0]);
+    tree.SetBranchAddress("dec_scy",&sat_dec[1]);
+    tree.SetBranchAddress("dec_scz",&sat_dec[2]);
+    tree.SetBranchAddress("lat_geo",&geographic_lat);
+    tree.SetBranchAddress("lon_geo",&geographic_lon);
+    tree.SetBranchAddress("lvtime",&lvtime);
+    
+    tree.GetEntry(0);  //Set initial value for the variables
+
+    std::cout<<"\nSBI data has been loaded"<<std::endl<<std::endl;
+    out_file<<"SBI data has been loaded"<<std::endl<<std::endl;
+    
+}
+*/
+
+void obtain_single_paths(std::vector<std::string> &SBIpaths,std::string list_path) {
+    
+    std::ifstream input_file(list_path);
+    if(!input_file.is_open()) {
+        std::cerr << "\nERROR 100! File not open. The path is:\n" << list_path << "\n\n";
+        exit(100);
+    }
+    
+    std::string input_string((std::istreambuf_iterator< char >(input_file)), (std::istreambuf_iterator< char >()));
+    std::string tmp_str;
+    input_file.close();
+    std::istringstream input_stream(input_string);
+    while(input_stream>>tmp_str)
+        //for (string::iterator it=input_stream.begin();it!=input_stream.end();++it)
+        SBIpaths.push_back(tmp_str);
+    
+}
+
+#if 0
+
+Bool_t check_sbi_loading(Float_t galactic_lat,Float_t galactic_lon,Float_t geographic_lat,Float_t geographic_lon,Float_t sat_ra[],Float_t sat_dec[],UInt_t sec,UShort_t n_events) {
+    Bool_t status=true;
+    std::vector<Float_t> variables;
+    Int_t idx_v=0;
+  
+    variables.push_back(galactic_lat);
+    variables.push_back(galactic_lon);
+    variables.push_back(geographic_lat);
+    variables.push_back(geographic_lon);
+    for(Int_t idx=0; idx<3; idx++) {
+        variables.push_back(sat_ra[idx]);
+        variables.push_back(sat_dec[idx]);
+    }
+    variables.push_back(sec);
+    variables.push_back(n_events);
+
+    // for(Int_t idx_v=0; idx_v<(variables.size()); idx_v++)
+    // cout<<endl<<variables.at(idx_v);
+
+    while(status==true && idx_v<variables.size()) {
+        status*=chech_if_null_variable(variables.at(idx_v));
+        idx_v++;
+    }
+  
+    return status;
+}
+
+Bool_t chech_if_null_variable(Float_t in_variable) {
+    Bool_t is_null;
+
+    if(in_variable==0)
+        is_null=true;
+    else
+        is_null=false;
+
+    return !is_null;
+   
+}
+
+void reinitialize_all_variables(Float_t &galactic_lat,Float_t &galactic_lon,Float_t &geographic_lat,Float_t &geographic_lon,Float_t sat_ra[],Float_t sat_dec[],UInt_t &sec,UShort_t &n_events) {
+
+    galactic_lat=0;
+    galactic_lon=0;
+    geographic_lat=0;
+    geographic_lon=0;
+
+    for(Int_t idx=0; idx<3; idx++) {
+        sat_ra[idx]=0;
+        sat_dec[idx]=0;
+    }
+
+    sec=0;
+    n_events=0;
+
+}
+
+#endif

@@ -1,0 +1,14 @@
+********************* Automatic Log File Generator *******************
+
+////////////////////////// Simulation Parameters //////////////////////////
+
+Simulation timestamp: 1529853082
+Simulation TRandom3 seed: 9
+Number of readed SBI files: 3
+Choosen 6 different number of events: 5  10  50  100  500  1000
+*
+*
+*
+
+SBI data has been loaded
+
